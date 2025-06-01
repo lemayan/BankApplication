@@ -7,7 +7,7 @@ const AnimatedCounter = ({amount}:{amount:number}) => {
      <CountUp
         duration={2.5}
         decimals = {2}
-        decimal =','
+        decimal ='.'
         prefix = "Ksh"
         end={amount} />
     </div>
