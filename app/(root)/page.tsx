@@ -8,26 +8,20 @@ const Home = () => {
     <section className='home'>
 
       <div className='home-content'>
-         <header className='home-header'>
-        <HeaderBox
+        <header className='home-header'>
+          <HeaderBox
+            type='greeting'
+            title='Welcome'
+            user={loggedIn?.firstName || 'Guest'}
+            subtext='Easily view and manage your accounts and transactions.'
+          />
 
-        type='greeting'
-        title='Welcome'
-        user = {loggedIn?.firstName || 'Guest'}
-        subtext='Access and Manage your Account and Transactions efficiently.'
-
-
-
-        
-        
-        />
-
-        <TotalBalanceBox
-        accounts={[]}
-        totalBanks={1}
-        totalCurrentBalance={1250.35}
-        />
-      </header>
+          <TotalBalanceBox
+            accounts={[]}
+            totalBanks={1}
+            totalCurrentBalance={1250.35}
+          />
+        </header>
       </div>
      
 
