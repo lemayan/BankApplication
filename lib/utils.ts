@@ -195,7 +195,18 @@ export const getTransactionStatus = (date: Date) => {
   return date > twoDaysAgo ? "Processing" : "Success";
 };
 
- export const authFormSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(8 , "Password must be at least 8 characters long"),
+ export const authFormSchema = (type: string) => z.object({
+  // SIGN UP
+  firstName: type === "sign-in" ? z.string().optional() : z.string().min(1, "First name is required"),
+  lastName: type === "sign-in" ? z.string().optional() : z.string().min(1, "Last name is required"),
+  address1: type === "sign-in" ? z.string().optional() : z.string().min(1, "Address is required"),
+  constituency: type === "sign-in" ? z.string().optional() : z.string().min(1, "City is required"),
+  county: type === "sign-in" ? z.string().optional() : z.string().min(1, "State is required"),
+  postalCode: type === "sign-in" ? z.string().optional() : z.string().min(1, "Postal code is required"),
+  dateOfBirth: type === "sign-in" ? z.string().optional() : z.string().min(1, "Date of birth is required"),
+  ssn: type === "sign-in" ? z.string().optional() : z.string().min(1, "SSN is required"),
+  
+  // SIGN IN /SIGN UP
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters long"),
 })
