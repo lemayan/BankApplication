@@ -4,11 +4,15 @@ import { ID } from "node-appwrite";
 import { createAdminClient, createSessionClient } from "../appwrite";
 import { cookies } from "next/headers";
 import { parseStringify } from "../utils";
+import { email } from "zod/v4-mini";
 
 
-export const signIn = async () => {
+export const signIn = async ({ email , password } : signInProps) => {
     try {
-        // signIn logic here
+         const { account } = await createAdminClient();
+         const response = await account.createEmailPasswordSession(email , password);
+         return parseStringify(response);
+
     } catch (error) {
         console.error("Error during sign-in:", error);
         throw error;
@@ -48,8 +52,23 @@ export const signUp = async (userData: SignUpParams) => {
 export async function getLoggedInUser() {
     try {
         const { account } = await createSessionClient();
-        return await account.get();
+        const user = await account.get();
+        return parseStringify(user);
     } catch (error) {
         return null;
     }
+}
+
+export const logoutAccount = async () => {
+    try{
+        const { account } = await createSessionClient();
+        (await cookies()).delete ('appwrite-session');
+        await account.deleteSession('current');
+        return true;
+    }
+        catch (error){
+            return null;
+        }
+        
+   
 }

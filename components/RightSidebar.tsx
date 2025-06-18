@@ -10,15 +10,15 @@ const RightSidebar = ({ user, transactions, banks }: RightSidebarProps) => {
                 <div className='profile-banner' />
                 <div className='profile'>
                     <div className='profile-img'>
-                        <span className='text-5xl font-bold text-blue-500'>
-                            {user?.firstName?.charAt(0).toUpperCase() || 'i'}
+                        <span className='text-5xl font-bold text-[#7c3aed] bg-white rounded-full px-4 py-2 shadow'>
+                            {user?.name?.charAt(0).toUpperCase() || 'i'}
                         </span>
                     </div>
                     <div className='profile-details'>
-                        <h1 className='profile-name'>
-                            {user?.firstName} {user?.lastName}
+                        <h1 className='profile-name text-[#7c3aed]'>
+                            {user?.name}
                         </h1>
-                        <p className='profile-email'>
+                        <p className='profile-email text-[#b7aaff]'>
                             {user?.email}
                         </p>
                     </div>
@@ -26,7 +26,7 @@ const RightSidebar = ({ user, transactions, banks }: RightSidebarProps) => {
             </section>
             <section className='banks'>
                 <div className='flex w-full  justify-between'>
-                    <h2 className='header-2'>My Banks</h2>
+                    <h2 className='header-2 text-[#7c3aed]'>My Banks</h2>
                     <Link href='/' className='flex gap-2'>
                         <Image
                             src='/icons/plus.svg'
@@ -34,7 +34,7 @@ const RightSidebar = ({ user, transactions, banks }: RightSidebarProps) => {
                             height={20}
                             alt='plus'
                         />
-                        <h2 className='text-14 font-semibold text-gray-400'>Add Bank</h2>
+                        <h2 className='text-14 font-extrabold text-[#b7aaff]'>Add Bank</h2>
                     </Link>
                 </div>
                 {banks?.length > 0 && (
@@ -43,7 +43,7 @@ const RightSidebar = ({ user, transactions, banks }: RightSidebarProps) => {
                             <BankCard
                                 key={banks[0].$id}
                                 account={banks[0]}
-                                userName={`${user?.firstName} ${user?.lastName}`}
+                                userName={user.name}
                                 showBalance={false}
                             />
                         </div>
@@ -52,7 +52,7 @@ const RightSidebar = ({ user, transactions, banks }: RightSidebarProps) => {
                                 <BankCard
                                     key={banks[1].$id}
                                     account={banks[1]}
-                                    userName={`${user?.firstName} ${user?.lastName}`}
+                                    userName={user.name}
                                     showBalance={false}
                                 />
                             </div>

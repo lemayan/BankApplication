@@ -20,7 +20,7 @@ import CustomInput from './CustomInput';
 import { authFormSchema } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { signIn, signUp } from '@/lib/actions/user.actions';
+import { getLoggedInUser, signIn, signUp } from '@/lib/actions/user.actions';
 
 const AuthForm = ({ type }: { type: string }) => {
   const router = useRouter();
@@ -66,8 +66,12 @@ const AuthForm = ({ type }: { type: string }) => {
         }
 
         if(type === 'sign-in') {
-          await signIn();
-          router.push('/');
+
+          const response = await signIn({
+            email: data.email,
+            password: data.password
+          });
+          if (response) router.push('/');
         }
       } catch (error) {
         console.log(error);
@@ -77,7 +81,7 @@ const AuthForm = ({ type }: { type: string }) => {
     }
 
  return (
-    <section className="auth-form">
+    <section  className="auth-form bg-gradient-to-br from-[#e9e6fd] via-white to-[#b7aaff] rounded-xl p-8 shadow-md">
       <header className='flex flex-col gap-5 md:gap-8'>
           <Link href="/" className="cursor-pointer flex items-center gap-1">
             <Image 
@@ -86,7 +90,7 @@ const AuthForm = ({ type }: { type: string }) => {
               height={34}
               alt="Horizon logo"
             />
-            <h1 className="text-26 font-ibm-plex-serif font-bold text-black-1">Horizon</h1>
+            <h1 className="text-26 font-ibm-plex-serif font-bold text-black-1">IvyBanking</h1>
           </Link>
 
           <div className="flex flex-col gap-1 md:gap-3">
@@ -196,7 +200,7 @@ const AuthForm = ({ type }: { type: string }) => {
                             <Button 
                                 type="submit" 
                                 disabled={isLoading} 
-                                className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg mt-2"
+                                className="w-full bg-[#7c3aed] hover:bg-[#b7aaff] text-white py-3 rounded-lg mt-2"
                             >
                                 {isLoading ? (
                                     <div className="flex items-center justify-center gap-2">
@@ -218,12 +222,13 @@ const AuthForm = ({ type }: { type: string }) => {
                         </p>
                         <Link
                             href={type === "sign-in" ? "/sign-up" : "/sign-in"}
-                            className="text-blue-500 hover:underline form-link"
+                            className="text-[#7c3aed] hover:text-[#b7aaff] underline form-link"
                         >
                             {type === "sign-in" ? "Sign Up" : "Sign In"}
                         </Link>
                     </footer>
                 </>
+                
             )}
         </section>
     );
