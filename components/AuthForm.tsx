@@ -81,7 +81,7 @@ const AuthForm = ({ type }: { type: string }) => {
     }
 
  return (
-    <section  className="auth-form bg-gradient-to-br from-[#e9e6fd] via-white to-[#b7aaff] rounded-xl p-8 shadow-md">
+    <section  className="auth-form">
       <header className='flex flex-col gap-5 md:gap-8'>
           <Link href="/" className="cursor-pointer flex items-center gap-1">
             <Image 
@@ -90,7 +90,7 @@ const AuthForm = ({ type }: { type: string }) => {
               height={34}
               alt="Horizon logo"
             />
-            <h1 className="text-26 font-ibm-plex-serif font-bold text-black-1">IvyBanking</h1>
+            <h1 className="text-26 font-ibm-plex-serif font-bold text-black-1">Ivy Banking</h1>
           </Link>
 
           <div className="flex flex-col gap-1 md:gap-3">
@@ -200,7 +200,9 @@ const AuthForm = ({ type }: { type: string }) => {
                             <Button 
                                 type="submit" 
                                 disabled={isLoading} 
-                                className="w-full bg-[#7c3aed] hover:bg-[#b7aaff] text-white py-3 rounded-lg mt-2"
+                                className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg mt-2"
+
+
                             >
                                 {isLoading ? (
                                     <div className="flex items-center justify-center gap-2">
@@ -222,7 +224,7 @@ const AuthForm = ({ type }: { type: string }) => {
                         </p>
                         <Link
                             href={type === "sign-in" ? "/sign-up" : "/sign-in"}
-                            className="text-[#7c3aed] hover:text-[#b7aaff] underline form-link"
+                             className="text-blue-500 hover:underline form-link"
                         >
                             {type === "sign-in" ? "Sign Up" : "Sign In"}
                         </Link>

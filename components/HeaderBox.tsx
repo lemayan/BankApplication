@@ -6,7 +6,7 @@ const HeaderBox = ({type = 'title', title , subtext , user} : HeaderBoxProps) =>
         <h1 className='header-box-title'>
             {title}
             {type === 'greeting' && (
-                <span className='font-bold text-[#7c3aed]'>
+                <span className='text-bankGradient'>
                      &nbsp;{user}
                      
                      </span>

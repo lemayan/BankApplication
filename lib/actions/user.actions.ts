@@ -9,16 +9,20 @@ import { email } from "zod/v4-mini";
 
 export const signIn = async ({ email , password } : signInProps) => {
     try {
-         const { account } = await createAdminClient();
-         const response = await account.createEmailPasswordSession(email , password);
-         return parseStringify(response);
-
+        const { account } = await createAdminClient();
+        const response = await account.createEmailPasswordSession(email , password);
+        (await cookies()).set("appwrite-session", response.secret, {
+            path: "/",
+            httpOnly: true,
+            sameSite: "strict",
+            secure: true,
+        });
+        return parseStringify(response);
     } catch (error) {
         console.error("Error during sign-in:", error);
         throw error;
     }
 };
-
 export const signUp = async (userData: SignUpParams) => {
     try {
         const { email, password , firstName , lastName} = userData;
@@ -60,15 +64,12 @@ export async function getLoggedInUser() {
 }
 
 export const logoutAccount = async () => {
-    try{
+    try {
         const { account } = await createSessionClient();
-        (await cookies()).delete ('appwrite-session');
         await account.deleteSession('current');
+        (await cookies()).delete('appwrite-session');
         return true;
+    } catch (error) {
+        return null;
     }
-        catch (error){
-            return null;
-        }
-        
-   
 }

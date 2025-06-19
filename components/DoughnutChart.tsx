@@ -13,9 +13,9 @@ const DoughnutChart = ({accounts} : DoughnutChartProps) => {
         label: 'Banks',
         data: [1250, 2500, 3750],
         backgroundColor: [
-          '#e9e6fd', // light purple
-          '#b7aaff', // medium purple
-          '#7c3aed'  // deep purple
+        '#2563eb', // deep blue
+        '#1e40af', // darker blueAdd commentMore actions
+        '#0ea5e9'  // vibrant blue
         ],
         borderWidth: 0,
       }
@@ -38,3 +38,4 @@ const DoughnutChart = ({accounts} : DoughnutChartProps) => {
   };
 
 export default DoughnutChart
+
