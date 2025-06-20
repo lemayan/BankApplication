@@ -9,7 +9,7 @@ export default function RootLayout({
       <div className="flex flex-1 items-center justify-center">
         {children}
       </div>
-      <div className="flex flex-1 items-center justify-center bg-[#f5faff]">
+      <div className="hidden md:flex flex-1 items-center justify-center bg-[#f5faff]">
         <div className="rounded-2xl shadow-lg border-4 border-violet-600 p-8 bg-white">
           <Image
             src="/icons/face3.png"

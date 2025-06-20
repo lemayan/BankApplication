@@ -21,6 +21,7 @@ import { authFormSchema } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { getLoggedInUser, signIn, signUp } from '@/lib/actions/user.actions';
+import PlaidLink from './PlaidLink';
 
 const AuthForm = ({ type }: { type: string }) => {
   const router = useRouter();
@@ -110,11 +111,12 @@ const AuthForm = ({ type }: { type: string }) => {
             </h1>
           </div>
       </header>
-      {user ? (
+      {/* {user ? ( */}
         <div className="flex flex-col gap-4">
+          <PlaidLink user = {user} variant = "primary" />
 
         </div>
-      ): (
+      {/* ): ( */}
                 <>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
@@ -146,7 +148,7 @@ const AuthForm = ({ type }: { type: string }) => {
                                         control={form.control} 
                                         name='county' 
                                         label="County" 
-                                        placeholder='Enter your city' 
+                                        placeholder='County of residence' 
                                     />
                                     
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -231,7 +233,7 @@ const AuthForm = ({ type }: { type: string }) => {
                     </footer>
                 </>
                 
-            )}
+            {/* )} */}
         </section>
     );
 };
