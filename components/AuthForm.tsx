@@ -52,8 +52,8 @@ const AuthForm = ({ type }: { type: string }) => {
             firstName: data.firstName!,
             lastName: data.lastName!,
             address1: data.address1!,
-            county: data.county!,
-            constituency: data.constituency!,
+            city: data.city!,
+            state: data.state!,
             postalCode: data.postalCode!,
             dateOfBirth: data.dateOfBirth!,
             ssn: data.ssn!,
@@ -111,12 +111,12 @@ const AuthForm = ({ type }: { type: string }) => {
             </h1>
           </div>
       </header>
-      {/* {user ? ( */}
+      {user ? (
         <div className="flex flex-col gap-4">
-          <PlaidLink user = {user} variant = "primary" />
-
+          <PlaidLink user={user} variant="primary" />
         </div>
-      {/* ): ( */}
+      ) : (
+        <>
                 <>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
@@ -146,17 +146,17 @@ const AuthForm = ({ type }: { type: string }) => {
                                     
                                     <CustomInput 
                                         control={form.control} 
-                                        name='county' 
-                                        label="County" 
-                                        placeholder='County of residence' 
+                                        name='city' 
+                                        label="City" 
+                                        placeholder='City of residence' 
                                     />
                                     
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <CustomInput 
                                             control={form.control} 
-                                            name='constituency'
-                                            label="Constituency" 
-                                            placeholder='e.g Westlands'
+                                            name='state'
+                                            label="State" 
+                                            placeholder='e.g NY'
 
     
                                         />
@@ -233,9 +233,10 @@ const AuthForm = ({ type }: { type: string }) => {
                     </footer>
                 </>
                 
-            {/* )} */}
-        </section>
-    );
+        </>
+      )}
+    </section>
+  );
 };
 
 export default AuthForm;
