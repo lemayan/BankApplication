@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { logoutAccount } from '@/lib/actions/user.actions';
 import { useRouter } from 'next/navigation';
+import { capitalizeFirstName } from '@/lib/utils';
 
 
 const Footer = ({user , type = 'desktop'}: FooterProps) => {
@@ -16,13 +17,13 @@ const Footer = ({user , type = 'desktop'}: FooterProps) => {
         
         <div className={type === 'mobile' ? 'footer_name-mobile' : 'footer_name'}>
             <p className='text-xl font-bold text-gray-700'>
-                {user?.name[0]}
+                {capitalizeFirstName(user?.firstName)?.[0] || 'I'}
             </p>
 
         </div>
         <div className={type === 'mobile' ? 'footer_email-mobile' : 'footer_email'}>
           <h1 className='text-14 truncate text-blue-600 font-semibold'>
-            {user?.name}
+            {capitalizeFirstName(user?.firstName)}
           </h1>
           <p className='text-14 text-gray-600 font-normal truncate'>
             {user?.email}

@@ -2,6 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import BankCard from './BankCard'
+import { capitalizeFirstName } from '@/lib/utils'
 
 const RightSidebar = ({ user, transactions, banks }: RightSidebarProps) => {
     return (
@@ -11,12 +12,12 @@ const RightSidebar = ({ user, transactions, banks }: RightSidebarProps) => {
                 <div className='profile'>
                     <div className='profile-img'>
                         <span className='text-5xl font-bold text-[#7c3aed] bg-white rounded-full px-4 py-2 shadow'>
-                            {user?.name?.charAt(0).toUpperCase() || 'i'}
+                            {capitalizeFirstName(user.firstName)?.charAt(0).toUpperCase() || 'I'}
                         </span>
                     </div>
                     <div className='profile-details'>
                         <h1 className='profile-name text-[#7c3aed]'>
-                            {user?.name}
+                            {capitalizeFirstName(user.firstName)} {user.lastName}
                         </h1>
                         <p className='profile-email text-[#b7aaff]'>
                             {user?.email}
@@ -43,7 +44,7 @@ const RightSidebar = ({ user, transactions, banks }: RightSidebarProps) => {
                             <BankCard
                                 key={banks[0].$id}
                                 account={banks[0]}
-                                userName={user?.name}
+                                userName={`${capitalizeFirstName(user.firstName)} ${user.lastName}`}
                                 showBalance={false}
                             />
                         </div>
@@ -52,7 +53,7 @@ const RightSidebar = ({ user, transactions, banks }: RightSidebarProps) => {
                                 <BankCard
                                     key={banks[1].$id}
                                     account={banks[1]}
-                                    userName={user?.name}
+                                    userName={`${capitalizeFirstName(user.firstName)} ${user.lastName}`}
                                     showBalance={false}
                                 />
                             </div>

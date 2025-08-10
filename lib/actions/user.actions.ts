@@ -3,7 +3,7 @@
 import { ID, Query } from "node-appwrite";
 import { createAdminClient, createSessionClient } from "../appwrite";
 import { cookies } from "next/headers";
-import { encryptId, extractCustomerIdFromUrl, parseStringify } from "../utils";
+import { encryptId, extractCustomerIdFromUrl, parseStringify, capitalizeFirstName } from "../utils";
 import { email } from "zod/v4-mini";
 import { CountryCode, ProcessorTokenCreateRequest, ProcessorTokenCreateRequestProcessorEnum, Products } from "plaid";
 import { Languages } from "lucide-react";
@@ -19,19 +19,39 @@ const {
     APPWRITE_BANK_COLLECTION_ID: BANK_COLLECTION_ID,
 
 } = process.env;
+export const getUserInfo = async ({ userId }: getUserInfoProps) => {
+    try{
+    const {database} = await createAdminClient();
+    const user= await database.listDocuments(
+      DATABASE_ID!,
+      USER_COLLECTION_ID!,   
+      [Query.equal("userId", [userId])],
 
+
+    )
+
+    return parseStringify(user.documents[0]);
+  }catch (error) {
+    console.log("An error occurred while getting the banks:", error);
+  }
+
+}
 
 export const signIn = async ({ email , password } : signInProps) => {
     try {
         const { account } = await createAdminClient();
-        const response = await account.createEmailPasswordSession(email , password);
-        (await cookies()).set("appwrite-session", response.secret, {
+        const session = await account.createEmailPasswordSession(email, password);
+
+        (await cookies()).set("appwrite-session", session.secret, {
             path: "/",
             httpOnly: true,
             sameSite: "strict",
             secure: true,
+           
         });
-        return parseStringify(response);
+        const user = await getUserInfo({userId: session.userId});
+     
+        return parseStringify(user);
     } catch (error) {
         console.error("Error during sign-in:", error);
         throw error;
@@ -45,7 +65,13 @@ export const signUp = async ({password , ...userData}: SignUpParams) => {
         if (!email || !password) {
             throw new Error("Email and password are required.");
         }
-        const { account , database } = await createAdminClient();        // Check if user already exists in our database
+        
+        // Capitalize firstName
+        const capitalizedFirstName = capitalizeFirstName(firstName);
+        
+        const { account , database } = await createAdminClient();    
+            // Check if user already exists in our database
+        
         try {
             const existingUsers = await database.listDocuments(
                 DATABASE_ID!,
@@ -70,13 +96,14 @@ export const signUp = async ({password , ...userData}: SignUpParams) => {
         const newUserAccount= await account.create(ID.unique(),
         email, 
         password, 
-        `${firstName} ${lastName}`
+        `${capitalizedFirstName} ${lastName}`
         );
 
         if (!newUserAccount) throw new Error ("Error creating user ")
 
         const dwollaCustomerUrl= await createDwollaCustomer({
             ...userData,
+            firstName: capitalizedFirstName,
             type: "personal"
         })
         if (!dwollaCustomerUrl) throw new Error("Error creating Dwolla customer");
@@ -87,7 +114,7 @@ export const signUp = async ({password , ...userData}: SignUpParams) => {
             ID.unique(),
             {
                 email: userData.email,
-                firstName: userData.firstName,
+                firstName: capitalizedFirstName,
                 lastName: userData.lastName,
                 userId: newUserAccount.$id,
                 dwollaCustomerId,
@@ -122,7 +149,8 @@ export const signUp = async ({password , ...userData}: SignUpParams) => {
 export async function getLoggedInUser() {
     try {
         const { account } = await createSessionClient();
-        const user = await account.get();
+        const result = await account.get();
+        const user = await getUserInfo({ userId: result.$id });
         return parseStringify(user);
     } catch (error) {
         return null;
@@ -147,7 +175,7 @@ export const createLinkToken = async (user : User) =>{
             user :{
                 client_user_id: user.$id
             },
-            client_name: `${user.firstName} ${user.lastName}'s Bank Account`,
+            client_name: `${capitalizeFirstName(user.firstName)} ${user.lastName}'s Bank Account`,
             products: ['auth'] as Products[],
             country_codes: ['US'] as CountryCode[],
             language: 'en',
@@ -260,3 +288,37 @@ export const exchangePublicToken = async ({
     console.error("An error occurred while creating exchanging token:", error);
   }
 }
+export const getBanks = async ({userId}:
+getBanksProps) => {
+  try{
+    const {database} = await createAdminClient();
+    const banks= await database.listDocuments(
+      DATABASE_ID!,
+      BANK_COLLECTION_ID!,   
+      [Query.equal("userId", [userId])],
+
+
+    )
+
+    return parseStringify(banks.documents);
+  }catch (error) {
+    console.log("An error occurred while getting the banks:", error);
+  }
+};
+export const getBank = async ({documentId}:
+getBankProps) => {
+  try{
+    const {database} = await createAdminClient();
+    const bank= await database.listDocuments(
+      DATABASE_ID!,
+      BANK_COLLECTION_ID!,   
+      [Query.equal("$id", [documentId])],
+
+
+    )
+
+    return parseStringify(bank.documents[0]);
+  }catch (error) {
+    console.log("An error occurred while getting the banks:", error);
+  }
+};

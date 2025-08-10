@@ -67,9 +67,9 @@ export const formatDateTime = (dateString: Date) => {
 };
 
 export function formatAmount(amount: number): string {
-  const formatter = new Intl.NumberFormat("en-KE", {
+  const formatter = new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "KES",
+    currency: "USD",
     minimumFractionDigits: 2,
   });
 
@@ -80,6 +80,12 @@ export const parseStringify = (value: any) => JSON.parse(JSON.stringify(value));
 
 export const removeSpecialCharacters = (value: string) => {
   return value.replace(/[^\w\s]/gi, "");
+};
+
+// Capitalize first letter of a name
+export const capitalizeFirstName = (name: string) => {
+  if (!name) return name;
+  return name.trim().charAt(0).toUpperCase() + name.trim().slice(1).toLowerCase();
 };
 
 interface UrlQueryParams {

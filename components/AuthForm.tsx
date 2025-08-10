@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import CustomInput from './CustomInput';
 import { authFormSchema } from '@/lib/utils';
+import { capitalizeFirstName } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { getLoggedInUser, signIn, signUp } from '@/lib/actions/user.actions';
@@ -49,7 +50,7 @@ const AuthForm = ({ type }: { type: string }) => {
         
         if(type === 'sign-up') {
           const userData = {
-            firstName: data.firstName!,
+            firstName: capitalizeFirstName(data.firstName!),
             lastName: data.lastName!,
             address1: data.address1!,
             city: data.city!,
