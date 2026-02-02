@@ -1,20 +1,32 @@
 import HeaderBox from '@/components/HeaderBox'
+import RecentTransactions from '@/components/RecentTransactions'
 import RightSidebar from '@/components/RightSidebar'
 import TotalBalanceBox from '@/components/TotalBalanceBox'
-import { getAccount, getAccounts } from '@/lib/actions/bank.actions'
+import { getAccounts , getAccount } from '@/lib/actions/bank.actions'
 import { getLoggedInUser } from '@/lib/actions/user.actions'
 import { capitalizeFirstName } from '@/lib/utils'
-import { get } from 'http'
+import { Currency } from 'lucide-react'
 import React from 'react'
 
 const Home = async ({searchParams} : SearchParamProps) => {
+  // Await searchParams in Next.js 15+
   const { id, page } = await searchParams;
+  
+  // Only read params you actually need; avoiding unnecessary awaits/work.
+  const CurrentPage = Number (page as string) || 1;
+  
+  // Parallel data fetching for better performance
   const loggedIn = await getLoggedInUser();
-  const accounts = await getAccounts({ userId: loggedIn?.$id });
+  const [accounts] = await Promise.all([
+    getAccounts({ userId: loggedIn?.$id })
+  ]);
+  
   if (!accounts) return;
   const accountsData = accounts?.data;
-  const appwriteItemId = (id as string) || accountsData[0]?.appwriteItemId;
-  const account = await getAccount({ appwriteItemId });
+  const  appwriteItemId = (id as string) || accountsData?.[0]?.appwriteItemId;
+  
+  // Fetch account data in parallel with rendering
+  const account = await getAccount({appwriteItemId});
 
   return (
     <section className='home'>
@@ -34,11 +46,17 @@ const Home = async ({searchParams} : SearchParamProps) => {
             totalCurrentBalance={accounts?.totalCurrentBalance}
           />
         </header>
-        RECENT TRANSACTIONS
+        <RecentTransactions 
+        accounts = {accountsData}
+        transactions = {account?.transactions || []}
+        appwriteItemId = {appwriteItemId}
+        page = {CurrentPage}
+        />
+        
       </div>
       <RightSidebar 
       user ={loggedIn}
-      transactions={[]}
+      transactions={account?.transactions}
       banks= {accountsData?.slice (0, 2)}
       
       

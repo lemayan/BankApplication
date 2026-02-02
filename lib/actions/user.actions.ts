@@ -176,7 +176,7 @@ export const createLinkToken = async (user : User) =>{
                 client_user_id: user.$id
             },
             client_name: `${capitalizeFirstName(user.firstName)} ${user.lastName}'s Bank Account`,
-            products: ['auth'] as Products[],
+            products: ['auth', 'transactions'] as Products[],
             country_codes: ['US'] as CountryCode[],
             language: 'en',
             
@@ -313,9 +313,31 @@ getBankProps) => {
       DATABASE_ID!,
       BANK_COLLECTION_ID!,   
       [Query.equal("$id", [documentId])],
+    )
+
+    if (bank.documents.length === 0) {
+      throw new Error(`Bank with ID ${documentId} not found`);
+    }
+
+    return parseStringify(bank.documents[0]);
+  }catch (error) {
+    console.log("An error occurred while getting the banks:", error);
+    throw error;
+  }
+};
+
+export const getBankByAccountId = async ({accountId}:
+getBankByAccountIdProps) => {
+  try{
+    const {database} = await createAdminClient();
+    const bank= await database.listDocuments(
+      DATABASE_ID!,
+      BANK_COLLECTION_ID!,   
+      [Query.equal("accountId", [accountId])],
 
 
     )
+    if (bank.total !==1) return null;
 
     return parseStringify(bank.documents[0]);
   }catch (error) {

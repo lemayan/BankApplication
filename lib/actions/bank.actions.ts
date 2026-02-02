@@ -12,12 +12,22 @@ import {
 import { plaidClient } from "@/lib/plaid";
 import { parseStringify } from "../utils";
 
-// import { getTransactionsByBankId } from "./transaction.actions";
+import { getTransactionsByBankId } from "./transaction.actions";
 import { getBanks, getBank } from "./user.actions";
+
+// Simple in-memory cache (per server runtime instance) to avoid repeated Plaid calls during high navigation.
+// Not a replacement for a real cache; resets on deployment or server restart.
+const accountsCache = new Map<string, { expires: number; value: any }>();
+const CACHE_TTL_MS = 30_000; // 30 seconds – adjust cautiously.
 
 // Get multiple bank accounts
 export const getAccounts = async ({ userId }: getAccountsProps) => {
   try {
+    const cacheKey = `accounts:${userId}`;
+    const cached = accountsCache.get(cacheKey);
+    if (cached && cached.expires > Date.now()) {
+      return cached.value;
+    }
     // get banks from db
     const banks = await getBanks({ userId });
 
@@ -50,7 +60,7 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
           type: accountData.type as string,
           subtype: accountData.subtype! as string,
           appwriteItemId: bank.$id,
-          sharableId: bank.shareableId,
+          shareableId: bank.shareableId,
         };
 
         return account;
@@ -62,7 +72,9 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
       return total + account.currentBalance;
     }, 0);
 
-    return parseStringify({ data: accounts, totalBanks, totalCurrentBalance });
+  const result = parseStringify({ data: accounts, totalBanks, totalCurrentBalance });
+  accountsCache.set(cacheKey, { expires: Date.now() + CACHE_TTL_MS, value: result });
+  return result;
   } catch (error) {
     console.error("An error occurred while getting the accounts:", error);
     return parseStringify({ data: [], totalBanks: 0, totalCurrentBalance: 0 });
@@ -72,6 +84,12 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
 // Get one bank account
 export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
   try {
+    const cacheKey = `account:${appwriteItemId}`;
+    const cached = accountsCache.get(cacheKey);
+    if (cached && cached.expires > Date.now()) {
+      return cached.value;
+    }
+
     // get bank from db
     const bank = await getBank({ documentId: appwriteItemId });
 
@@ -81,22 +99,22 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
     });
     const accountData = accountsResponse.data.accounts[0];
 
-    // get transfer transactions from appwrite
-    // const transferTransactionsData = await getTransactionsByBankId({
-    //   bankId: bank.$id,
-    // });
+    //get transfer transactions from appwrite
+    const transferTransactionsData = await getTransactionsByBankId({
+      bankId: bank.$id,
+    });
 
-    // const transferTransactions = transferTransactionsData.documents.map(
-    //   (transferData: Transaction) => ({
-    //     id: transferData.$id,
-    //     name: transferData.name!,
-    //     amount: transferData.amount!,
-    //     date: transferData.$createdAt,
-    //     paymentChannel: transferData.channel,
-    //     category: transferData.category,
-    //     type: transferData.senderBankId === bank.$id ? "debit" : "credit",
-    //   })
-    // );
+    const transferTransactions = transferTransactionsData.documents.map(
+      (transferData: Transaction) => ({
+        id: transferData.$id,
+        name: transferData.name!,
+        amount: transferData.amount!,
+        date: transferData.$createdAt,
+        paymentChannel: transferData.channel,
+        category: transferData.category,
+        type: transferData.senderBankId === bank.$id ? "debit" : "credit",
+      })
+    );
 
     // get institution info from plaid
     const institution = await getInstitution({
@@ -120,17 +138,20 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
       appwriteItemId: bank.$id,
     };
 
-    // sort transactions by date such that the most recent transaction is first
-    // const allTransactions = [...transactions, ...transferTransactions].sort(
-    //   (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-    // );
+    // Merge Plaid transactions with transfer transactions from Appwrite
+    const allTransactions = [...transferTransactions, ...transactions].sort(
+      (a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
 
-    // return parseStringify({
-    //   data: account,
-    //   transactions: allTransactions,
-    // });
+    const result = parseStringify({
+      data: account,
+      transactions: allTransactions,
+    });
+    accountsCache.set(cacheKey, { expires: Date.now() + CACHE_TTL_MS, value: result });
+    return result;
   } catch (error) {
     console.error("An error occurred while getting the account:", error);
+    return parseStringify({ data: null, transactions: [] });
   }
 };
 
@@ -156,37 +177,51 @@ export const getInstitution = async ({
 export const getTransactions = async ({
   accessToken,
 }: getTransactionsProps) => {
-  let hasMore = true;
   let transactions: any = [];
 
   try {
-    // Iterate through each page of new transaction updates for item
-    while (hasMore) {
-      const response = await plaidClient.transactionsSync({
-        access_token: accessToken,
-      });
+    // Use transactionsGet for Plaid - get last 30 days of transactions
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 30);
+    const endDate = new Date();
 
-      const data = response.data;
+    const response = await plaidClient.transactionsGet({
+      access_token: accessToken,
+      start_date: startDate.toISOString().split('T')[0],
+      end_date: endDate.toISOString().split('T')[0],
+      options: {
+        count: 250,
+        offset: 0,
+      },
+    });
 
-      transactions = response.data.added.map((transaction) => ({
-        id: transaction.transaction_id,
-        name: transaction.name,
-        paymentChannel: transaction.payment_channel,
-        type: transaction.payment_channel,
-        accountId: transaction.account_id,
-        amount: transaction.amount,
-        pending: transaction.pending,
-        category: transaction.category ? transaction.category[0] : "",
-        date: transaction.date,
-        image: transaction.logo_url,
-      }));
+    // Helper function to format category names
+    const formatCategory = (category: string) => {
+      if (!category) return "Other";
+      return category
+        .toLowerCase()
+        .replace(/_/g, ' ')
+        .replace(/\b\w/g, (char) => char.toUpperCase());
+    };
 
-      hasMore = data.has_more;
-    }
+    transactions = response.data.transactions.map((transaction) => ({
+      id: transaction.transaction_id,
+      name: transaction.name,
+      paymentChannel: transaction.payment_channel,
+      type: transaction.amount > 0 ? 'debit' : 'credit',
+      accountId: transaction.account_id,
+      amount: Math.abs(transaction.amount),
+      pending: transaction.pending,
+      category: formatCategory(transaction.personal_finance_category?.primary || transaction.category?.[0] || "Other"),
+      date: transaction.date,
+      image: transaction.logo_url,
+    }));
 
     return parseStringify(transactions);
-  } catch (error) {
-    console.error("An error occurred while getting the accounts:", error);
+  } catch (error: any) {
+    console.error("An error occurred while getting the transactions:", error);
+    console.error("Plaid error details:", error.response?.data);
+    return parseStringify([]);
   }
 };
 

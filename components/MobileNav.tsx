@@ -27,6 +27,7 @@ const MobileNav = ({ user }: MobileNavProps) => {
             height={30}
             alt="menu"
             className="cursor-pointer"
+            priority
           />
         </SheetTrigger>
         <SheetContent side="left" className="border-none bg-white">
@@ -39,6 +40,7 @@ const MobileNav = ({ user }: MobileNavProps) => {
               width={34}
               height={34}
               alt="Horizon logo"
+              priority
             />
             <h1 className="text-26 font-ibm-plex-serif font-bold text-black-1">
               Ivy Banking
