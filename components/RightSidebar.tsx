@@ -15,12 +15,12 @@ const RightSidebar = ({ user, transactions, banks }: RightSidebarProps) => {
                 <div className='profile'>
                     <div className='profile-img'>
                         <span className='text-5xl font-bold text-[#7c3aed] bg-white rounded-full px-4 py-2 shadow'>
-                            {capitalizeFirstName(user.firstName)?.charAt(0).toUpperCase() || 'I'}
+                            {user?.firstName ? capitalizeFirstName(user.firstName).charAt(0).toUpperCase() : 'G'}
                         </span>
                     </div>
                     <div className='profile-details'>
                         <h1 className='profile-name text-[#7c3aed]'>
-                            {capitalizeFirstName(user.firstName)} {user.lastName}
+                            {user?.firstName ? capitalizeFirstName(user.firstName) : 'Guest'} {user?.lastName || ''}
                         </h1>
                         <p className='profile-email text-[#b7aaff]'>
                             {user?.email}

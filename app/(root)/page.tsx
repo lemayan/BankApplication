@@ -35,7 +35,7 @@ const Home = async ({searchParams} : SearchParamProps) => {
           <HeaderBox
             type='greeting'
             title='Welcome'
-            user={capitalizeFirstName(loggedIn.firstName) || 'Guest'}
+            user={loggedIn?.firstName ? capitalizeFirstName(loggedIn.firstName) : 'Guest'}
             subtext='Easily view and manage your accounts and transactions.'
           />
 

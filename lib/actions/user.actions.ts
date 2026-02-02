@@ -285,11 +285,15 @@ export const exchangePublicToken = async ({
 export const getBanks = async ({userId}:
 getBanksProps) => {
   try{
+    if (!userId) {
+      console.log("No userId provided to getBanks");
+      return [];
+    }
     const {database} = await createAdminClient();
     const banks= await database.listDocuments(
       DATABASE_ID!,
       BANK_COLLECTION_ID!,   
-      [Query.equal("userId", [userId])],
+      [Query.equal("userId", userId)],
 
 
     )
@@ -302,11 +306,14 @@ getBanksProps) => {
 export const getBank = async ({documentId}:
 getBankProps) => {
   try{
+    if (!documentId) {
+      throw new Error("No documentId provided to getBank");
+    }
     const {database} = await createAdminClient();
     const bank= await database.listDocuments(
       DATABASE_ID!,
       BANK_COLLECTION_ID!,   
-      [Query.equal("$id", [documentId])],
+      [Query.equal("$id", documentId)],
     )
 
     if (bank.documents.length === 0) {
