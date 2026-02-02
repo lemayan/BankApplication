@@ -7,7 +7,6 @@ import { Progress } from "./ui/progress";
 
 const Category = ({ category }: CategoryProps) => {
   const {
-    bg,
     circleBg,
     text: { main, count },
     progress: { bg: progressBg, indicator },

@@ -4,14 +4,10 @@ import { ID, Query } from "node-appwrite";
 import { createAdminClient, createSessionClient } from "../appwrite";
 import { cookies } from "next/headers";
 import { encryptId, extractCustomerIdFromUrl, parseStringify, capitalizeFirstName } from "../utils";
-import { email } from "zod/v4-mini";
 import { CountryCode, ProcessorTokenCreateRequest, ProcessorTokenCreateRequestProcessorEnum, Products } from "plaid";
-import { Languages } from "lucide-react";
 import { plaidClient } from "@/lib/plaid";
 import { revalidatePath } from "next/cache";
 import { addFundingSource, createDwollaCustomer } from "./dwolla.actions";
-import { create } from "domain";
-import { id } from "zod/v4/locales";
 
 const {
     APPWRITE_DATABASE_ID: DATABASE_ID,
@@ -58,8 +54,6 @@ export const signIn = async ({ email , password } : signInProps) => {
     }
 };
 export const signUp = async ({password , ...userData}: SignUpParams) => {
-    let newUserAccount;
-
     try {
         const { email , firstName , lastName} = userData;
         if (!email || !password) {
@@ -152,7 +146,7 @@ export async function getLoggedInUser() {
         const result = await account.get();
         const user = await getUserInfo({ userId: result.$id });
         return parseStringify(user);
-    } catch (error) {
+    } catch (_error) {
         return null;
     }
 }
@@ -163,7 +157,7 @@ export const logoutAccount = async () => {
         await account.deleteSession('current');
         (await cookies()).delete('appwrite-session');
         return true;
-    } catch (error) {
+    } catch (_error) {
         return null;
         
     }
@@ -221,7 +215,7 @@ export const createBankAccount = async({
         return parseStringify(bankAccount);
        
 
-    } catch (error) {
+    } catch (_error) {
 
     }
 }

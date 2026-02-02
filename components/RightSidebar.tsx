@@ -69,7 +69,7 @@ const RightSidebar = ({ user, transactions, banks }: RightSidebarProps) => {
                     Top Categories
                 </h2>
                 <div className='space-y-5'>
-                    {categories.slice(0, 4).map((category, index) => (
+                    {categories.slice(0, 4).map((category) => (
                         <Category
                         key ={category.name}
                         category = {category}

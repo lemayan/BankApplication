@@ -2,7 +2,6 @@ import BankCard from '@/components/BankCard';
 import HeaderBox from '@/components/HeaderBox'
 import { getAccounts } from '@/lib/actions/bank.actions';
 import { getLoggedInUser } from '@/lib/actions/user.actions';
-import { Ban } from 'lucide-react';
 
 const MyBanks = async () => {
   const loggedIn = await getLoggedInUser();

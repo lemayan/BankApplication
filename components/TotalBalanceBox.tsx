@@ -2,7 +2,7 @@ import AnimatedCounter from './AnimatedCounter';
 import DoughnutChart from './DoughnutChart';
 
 type TotalBalanceBoxProps = {
-  accounts?: any[];
+  accounts?: Account[];
   totalBanks: number;
   totalCurrentBalance: number;
 };

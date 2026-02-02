@@ -58,13 +58,14 @@ export const createDwollaCustomer = async (
     return await dwollaClient
       .post("customers", newCustomer)
       .then((res) => res.headers.get("location"));
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Creating a Dwolla Customer Failed: ", err);
     
     // Check if it's a duplicate customer error
-    if (err.body && err.body._embedded && err.body._embedded.errors) {
-      const duplicateError = err.body._embedded.errors.find(
-        (error: any) => error.code === "Duplicate" && error.path === "/email"
+    const error = err as { body?: { _embedded?: { errors?: Array<{ code?: string; path?: string; _links?: { about?: string } }> } } };
+    if (error.body && error.body._embedded && error.body._embedded.errors) {
+      const duplicateError = error.body._embedded.errors.find(
+        (e) => e.code === "Duplicate" && e.path === "/email"
       );
       
       if (duplicateError && duplicateError._links && duplicateError._links.about) {

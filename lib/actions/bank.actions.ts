@@ -17,7 +17,7 @@ import { getBanks, getBank } from "./user.actions";
 
 // Simple in-memory cache (per server runtime instance) to avoid repeated Plaid calls during high navigation.
 // Not a replacement for a real cache; resets on deployment or server restart.
-const accountsCache = new Map<string, { expires: number; value: any }>();
+const accountsCache = new Map<string, { expires: number; value: unknown }>();
 const CACHE_TTL_MS = 30_000; // 30 seconds – adjust cautiously.
 
 // Get multiple bank accounts
@@ -140,7 +140,7 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
 
     // Merge Plaid transactions with transfer transactions from Appwrite
     const allTransactions = [...transferTransactions, ...transactions].sort(
-      (a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      (a: Transaction, b: Transaction) => new Date(b.date).getTime() - new Date(a.date).getTime()
     );
 
     const result = parseStringify({
@@ -177,7 +177,7 @@ export const getInstitution = async ({
 export const getTransactions = async ({
   accessToken,
 }: getTransactionsProps) => {
-  let transactions: any = [];
+  let transactions: Transaction[] = [];
 
   try {
     // Use transactionsGet for Plaid - get last 30 days of transactions
@@ -218,9 +218,9 @@ export const getTransactions = async ({
     }));
 
     return parseStringify(transactions);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("An error occurred while getting the transactions:", error);
-    console.error("Plaid error details:", error.response?.data);
+    console.error("Plaid error details:", (error as Error));
     return parseStringify([]);
   }
 };

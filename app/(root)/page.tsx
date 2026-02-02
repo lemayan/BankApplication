@@ -5,7 +5,6 @@ import TotalBalanceBox from '@/components/TotalBalanceBox'
 import { getAccounts , getAccount } from '@/lib/actions/bank.actions'
 import { getLoggedInUser } from '@/lib/actions/user.actions'
 import { capitalizeFirstName } from '@/lib/utils'
-import { Currency } from 'lucide-react'
 import React from 'react'
 
 const Home = async ({searchParams} : SearchParamProps) => {
