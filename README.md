@@ -3,6 +3,12 @@
   <p>A modern, full-stack banking application built with Next.js, featuring real-time transaction tracking, multi-bank connectivity, and secure payment transfers.</p>
   
   <p>
+    <a href="https://ivybanking-production.up.railway.app" target="_blank">
+      <img src="https://img.shields.io/badge/🚀_Live_Demo-Visit_App-success?style=for-the-badge" alt="Live Demo" />
+    </a>
+  </p>
+  
+  <p>
     <img src="https://img.shields.io/badge/Next.js-15.3-black?style=for-the-badge&logo=next.js" alt="Next.js" />
     <img src="https://img.shields.io/badge/React-19.0-blue?style=for-the-badge&logo=react" alt="React" />
     <img src="https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript" alt="TypeScript" />
@@ -313,5 +319,6 @@ For questions or support, please open an issue on GitHub.
 <div align="center">
   <p>Built with ❤️ using Next.js and modern web technologies</p>
 </div>
-#   L a s t   u p d a t e d :   0 2 / 0 2 / 2 0 2 6   1 8 : 5 2 : 4 9  
+#   L a s t   u p d a t e d :   0 2 / 0 2 / 2 0 2 6   1 8 : 5 2 : 4 9 
+ 
  
