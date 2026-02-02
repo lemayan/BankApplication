@@ -1,19 +1,18 @@
 <div align="center">
-  <h1>🏦 Ivy Banking</h1>
-  <p>A modern, full-stack banking application built with Next.js, featuring real-time transaction tracking, multi-bank connectivity, and secure payment transfers.</p>
   
-  <p>
-    <a href="https://ivybanking-production.up.railway.app" target="_blank">
-      <img src="https://img.shields.io/badge/🚀_Live_Demo-Visit_App-success?style=for-the-badge" alt="Live Demo" />
-    </a>
-  </p>
-  
-  <p>
-    <img src="https://img.shields.io/badge/Next.js-15.3-black?style=for-the-badge&logo=next.js" alt="Next.js" />
-    <img src="https://img.shields.io/badge/React-19.0-blue?style=for-the-badge&logo=react" alt="React" />
-    <img src="https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript" alt="TypeScript" />
-    <img src="https://img.shields.io/badge/Tailwind-3.4-38bdf8?style=for-the-badge&logo=tailwind-css" alt="Tailwind CSS" />
-  </p>
+# 🏦 Ivy Banking
+
+### A modern, full-stack banking application built with Next.js
+
+**Real-time transaction tracking • Multi-bank connectivity • Secure payment transfers**
+
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Visit_App-success?style=for-the-badge)](https://ivybanking-production.up.railway.app)
+
+![Next.js](https://img.shields.io/badge/Next.js-15.3-black?style=for-the-badge&logo=next.js)
+![React](https://img.shields.io/badge/React-19.0-blue?style=for-the-badge&logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)
+![Tailwind](https://img.shields.io/badge/Tailwind-3.4-38bdf8?style=for-the-badge&logo=tailwind-css)
+
 </div>
 
 ---
@@ -50,13 +49,6 @@
 - Status badges for different transaction types
 - Search and sort capabilities
 
-### 🎨 Modern UI/UX
-- Responsive design for all devices
-- Dark/light themed components
-- Smooth animations and transitions
-- Interactive charts and data visualizations
-- Category-specific color coding
-
 ---
 
 ## 🛠️ Tech Stack
@@ -76,10 +68,64 @@
 - **Payment Processing:** Dwolla
 - **Error Tracking:** Sentry
 
-### Developer Tools
-- **Language:** TypeScript
-- **Linting:** ESLint
-- **Code Quality:** Class Variance Authority, clsx, tailwind-merge
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+ installed
+- Appwrite account and project
+- Plaid developer account
+- Dwolla developer account
+
+### Installation
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/lemayan/BankApplication.git
+cd ivybanking
+```
+
+2. **Install dependencies**
+```bash
+npm install
+```
+
+3. **Set up environment variables**
+
+Create a `.env.local` file:
+
+```env
+# Appwrite
+NEXT_PUBLIC_APPWRITE_ENDPOINT=your_appwrite_endpoint
+NEXT_PUBLIC_APPWRITE_PROJECT=your_project_id
+APPWRITE_DATABASE_ID=your_database_id
+APPWRITE_USER_COLLECTION_ID=your_user_collection_id
+APPWRITE_BANK_COLLECTION_ID=your_bank_collection_id
+APPWRITE_TRANSACTION_COLLECTION_ID=your_transaction_collection_id
+NEXT_APPWRITE_KEY=your_appwrite_key
+
+# Plaid
+PLAID_CLIENT_ID=your_plaid_client_id
+PLAID_SECRET=your_plaid_secret
+PLAID_ENV=sandbox
+
+# Dwolla
+DWOLLA_KEY=your_dwolla_key
+DWOLLA_SECRET=your_dwolla_secret
+DWOLLA_BASE_URL=https://api-sandbox.dwolla.com
+DWOLLA_ENV=sandbox
+
+# Site
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+4. **Run the development server**
+```bash
+npm run dev
+```
+
+5. **Open [http://localhost:3000](http://localhost:3000)**
 
 ---
 
@@ -89,192 +135,68 @@
 ivybanking/
 ├── app/
 │   ├── (auth)/              # Authentication pages
-│   │   ├── sign-in/
-│   │   └── sign-up/
-│   ├── (root)/              # Main application pages
-│   │   ├── page.tsx         # Dashboard
-│   │   ├── my-banks/        # Bank accounts overview
-│   │   ├── payment-transfer/ # Transfer money
-│   │   └── transaction-history/ # Transaction list
+│   ├── (root)/              # Main application
 │   ├── api/                 # API routes
-│   ├── layout.tsx           # Root layout
-│   └── globals.css          # Global styles
+│   └── globals.css
 ├── components/              # React components
 │   ├── ui/                  # Shadcn UI components
-│   ├── AuthForm.tsx         # Authentication form
-│   ├── BankCard.tsx         # Bank account card
-│   ├── DoughnutChart.tsx    # Chart component
-│   ├── PaymentTransferForm.tsx # Transfer form
-│   ├── RightSidebar.tsx     # Dashboard sidebar
-│   ├── TransactionTable.tsx # Transaction list
+│   ├── AuthForm.tsx
+│   ├── BankCard.tsx
+│   ├── DoughnutChart.tsx
 │   └── ...
 ├── lib/
 │   ├── actions/             # Server actions
-│   │   ├── bank.actions.ts
-│   │   ├── transaction.actions.ts
-│   │   ├── user.actions.ts
-│   │   └── dwolla.actions.ts
-│   ├── appwrite.ts          # Appwrite configuration
-│   ├── plaid.ts             # Plaid configuration
-│   └── utils.ts             # Utility functions
+│   ├── appwrite.ts
+│   ├── plaid.ts
+│   └── utils.ts
 ├── constants/
-│   └── index.ts             # App constants
 ├── types/
-│   └── index.d.ts           # TypeScript definitions
 └── public/
-    └── icons/               # SVG icons
 ```
 
 ---
 
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js 18+ installed
-- npm, yarn, pnpm, or bun package manager
-- Appwrite account and project
-- Plaid developer account
-- Dwolla developer account
-
-### Environment Variables
-
-Create a `.env.local` file in the root directory:
-
-```env
-# Appwrite Configuration
-NEXT_PUBLIC_APPWRITE_ENDPOINT=your_appwrite_endpoint
-NEXT_PUBLIC_APPWRITE_PROJECT=your_project_id
-APPWRITE_DATABASE_ID=your_database_id
-APPWRITE_USER_COLLECTION_ID=your_user_collection_id
-APPWRITE_BANK_COLLECTION_ID=your_bank_collection_id
-APPWRITE_TRANSACTION_COLLECTION_ID=your_transaction_collection_id
-APPWRITE_SECRET=your_appwrite_secret
-
-# Plaid Configuration
-PLAID_CLIENT_ID=your_plaid_client_id
-PLAID_SECRET=your_plaid_secret
-PLAID_ENV=sandbox # or development/production
-
-# Dwolla Configuration
-DWOLLA_KEY=your_dwolla_key
-DWOLLA_SECRET=your_dwolla_secret
-DWOLLA_BASE_URL=https://api-sandbox.dwolla.com # or production URL
-
-# App Configuration
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
-```
-
-### Installation
-
-1. **Clone the repository**
-```bash
-git clone https://github.com/yourusername/ivybanking.git
-cd ivybanking
-```
-
-2. **Install dependencies**
-```bash
-npm install
-# or
-yarn install
-# or
-pnpm install
-```
-
-3. **Set up environment variables**
-- Copy `.env.example` to `.env.local`
-- Fill in all required credentials
-
-4. **Run the development server**
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
-
-5. **Open your browser**
-Navigate to [http://localhost:3000](http://localhost:3000)
-
----
-
-## 📱 Features Overview
+## 📱 Key Pages
 
 ### Dashboard
-- **Total Balance Card:** Shows combined balance across all accounts
-- **Recent Transactions:** Quick view of latest 5 transactions
-- **Bank Accounts:** Visual cards for each connected bank
-- **Spending Categories:** Top 4 categories with progress indicators
+- Combined balance across all accounts
+- Recent transactions
+- Bank account cards
+- Spending categories
 
 ### My Banks
-- View all connected bank accounts
-- See individual account balances
-- Quick access to transactions per bank
+- All connected bank accounts
+- Individual account balances
+- Quick transaction access
 
 ### Payment Transfer
-- Select sender and receiver banks
-- Enter amount and recipient details
-- Secure transfer processing via Dwolla
+- Send money between accounts
+- Secure Dwolla processing
 - Instant balance updates
 
 ### Transaction History
-- Complete transaction list with pagination (10 per page)
-- Filter by bank account
-- Transaction details including date, amount, category
-- Status indicators (Processing, Success, etc.)
-
----
-
-## 🎨 Design Features
-
-- **Color-Coded Categories:** Each transaction category has a unique color scheme
-- **Animated Counters:** Smooth number animations for balances
-- **Responsive Layout:** Mobile-first design that works on all devices
-- **Interactive Charts:** Visual representation of account distribution
-- **Progress Indicators:** Category spending visualization
+- Paginated transaction list
+- Bank account filters
+- Category indicators
 
 ---
 
 ## 🔒 Security
 
-- Server-side authentication with Appwrite
-- Secure API routes with middleware protection
+- Server-side authentication
+- Protected API routes
 - Environment variable encryption
-- HTTPS enforcement in production
-- Input validation with Zod schemas
-- XSS protection via React
-- CSRF token validation
-
----
-
-## 🚀 Deployment
-
-### Deploy on Vercel
-
-1. **Push to GitHub**
-```bash
-git push origin main
-```
-
-2. **Import to Vercel**
-- Go to [Vercel](https://vercel.com)
-- Import your GitHub repository
-- Add environment variables
-- Deploy
-
-3. **Configure Domain**
-- Add custom domain in Vercel settings
-- Update `NEXT_PUBLIC_SITE_URL` environment variable
+- Input validation with Zod
+- XSS & CSRF protection
 
 ---
 
 ## 📝 Scripts
 
 ```bash
-npm run dev      # Start development server
-npm run build    # Build for production
-npm run start    # Start production server
+npm run dev      # Development server
+npm run build    # Production build
+npm run start    # Production server
 npm run lint     # Run ESLint
 ```
 
@@ -282,43 +204,29 @@ npm run lint     # Run ESLint
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please follow these steps:
+Contributions are welcome!
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
 5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ---
 
 ## 🙏 Acknowledgments
 
-- [Next.js](https://nextjs.org/) - The React framework
-- [Appwrite](https://appwrite.io/) - Backend as a Service
-- [Plaid](https://plaid.com/) - Banking API
-- [Dwolla](https://www.dwolla.com/) - Payment processing
-- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS
-- [Radix UI](https://www.radix-ui.com/) - Accessible components
-- [shadcn/ui](https://ui.shadcn.com/) - Component library
-
----
-
-## 📧 Contact
-
-For questions or support, please open an issue on GitHub.
+- [Next.js](https://nextjs.org/)
+- [Appwrite](https://appwrite.io/)
+- [Plaid](https://plaid.com/)
+- [Dwolla](https://www.dwolla.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Radix UI](https://www.radix-ui.com/)
 
 ---
 
 <div align="center">
-  <p>Built with ❤️ using Next.js and modern web technologies</p>
+  
+**Built with ❤️ using Next.js and modern web technologies**
+
 </div>
-#   L a s t   u p d a t e d :   0 2 / 0 2 / 2 0 2 6   1 8 : 5 2 : 4 9 
- 
- 
